@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
-import { Provider } from 'react-redux';
-import storeProvider from '@/app/StoreProvider';
 import StoreProvider from '@/app/StoreProvider';
+import { Container, ThemeProvider } from '@mui/system';
+import { CssBaseline } from '@mui/material';
+import theme from '@/app/theme';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,10 +14,15 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
-	<StoreProvider>
-		<html lang="en">
-			<body className={inter.className}>{children}</body>
-		</html>
-	</StoreProvider>
+	<ThemeProvider theme={theme}>
+		<CssBaseline />
+		<StoreProvider>
+			<html lang="en" style={{ height: '100%' }}>
+				<body className={inter.className} style={{ margin: '0', height: '100%' }}>
+					<Container style={{ border: '2px solid green', height: '100%' }}>{children}</Container>
+				</body>
+			</html>
+		</StoreProvider>
+	</ThemeProvider>
 );
 export default RootLayout;

@@ -1,24 +1,17 @@
-'use client';
-
 import { Container } from '@mui/system';
-import { Button, Typography } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { changeName, currentName } from '@/lib/features/users/usersSlice';
-import { signUp } from '@/lib/actions/signUp.action';
+import { Button } from '@mui/material';
+import { getSession } from '@/lib/actions/getSession';
+import { getUsers } from '@/lib/actions/user.action';
+import Link from 'next/link';
 
-const Home = () => {
-	const name = useAppSelector(currentName);
-	const dispatch = useAppDispatch();
-
-	const testFn = async () => {
-		await signUp();
-	};
+const Home = async () => {
+	const session = await getSession();
 
 	return (
 		<main style={{ height: '100%' }}>
 			<Container disableGutters sx={{ height: '100%' }}>
-				test defname: {name}
-				<Button onClick={testFn}>test</Button>
+				<Link href="/register">Register</Link>
+				<Link href="/login">Login</Link>
 			</Container>
 		</main>
 	);
