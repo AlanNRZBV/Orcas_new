@@ -1,12 +1,12 @@
 'use server';
 import { connectToDb } from '@/lib/db';
 import { User } from '@/database/user.schema';
-import { IErrorResponse, IUser, IUserLogin } from '@/lib/types';
+import { IUser, IUserFormResponse, IUserLogin } from '@/lib/types';
 import { getSession } from '@/lib/actions/getSession';
 import mongoose, { mongo } from 'mongoose';
-import { redirect } from 'next/navigation';
+import { userFormSchema } from '@/lib/validation/userFormSchema';
 
-export const signIn = async (prevState: undefined | IErrorResponse, formData: FormData) => {
+export const signIn = async (prevState: IUserFormResponse, formData: FormData) => {
 	try {
 		await connectToDb();
 		const session = await getSession();
@@ -19,66 +19,77 @@ export const signIn = async (prevState: undefined | IErrorResponse, formData: Fo
 		const user = await User.findOne({ email: loginData.email });
 
 		if (!user) {
-			return { message: 'Wrong credentials', isJSON: false };
+			return { ...prevState, message: 'Wrong credentials', isJSON: false };
 		}
 
 		const isMatch = await user.checkPassword(loginData.password);
 
 		if (!isMatch) {
-			return { message: 'Wrong credentials', isJSON: false };
+			return { ...prevState, message: 'Wrong credentials', isJSON: false };
 		}
 
 		if (!session) {
 			//IDK mb it's not necessary
-			return { message: 'Session error', isJSON: false };
+			return { ...prevState, message: 'Session error', isJSON: false };
 		}
 
 		session.email = user.email;
 		session.isLoggedIn = true;
 		await session.save();
-		redirect('/');
+
+		return { ...prevState, dbErrorMsg: 'Login successful', isJSON: false };
 	} catch (e) {
 		if (e instanceof mongoose.Error.ValidationError) {
 			//TODO
 			// this is not the way
-			return { message: JSON.stringify(e), isJSON: true };
+			return { ...prevState, dbErrorMsg: JSON.stringify(e), isJSON: true };
 		}
 
-		return { message: 'Login failed due to an unexpected error', isJSON: false };
+		return { ...prevState, dbErrorMsg: 'Login failed due to an unexpected error', isJSON: false };
 	}
 };
 
-export const signUp = async (prevState: undefined | IErrorResponse, formData: FormData) => {
+export const signUp = async (prevState: IUserFormResponse, formData: FormData) => {
 	try {
 		await connectToDb();
 
-		const middleName = formData.get('middleName');
-
 		const user: IUser = {
-			name: formData.get('name') as string,
-			lastName: formData.get('lastName') as string,
-			middleName: middleName === '' ? (middleName as string) : 'def',
+			username: formData.get('username') as string,
 			email: formData.get('email') as string,
 			password: formData.get('password') as string,
 		};
 
+		const validatedUser = userFormSchema.safeParse(user);
+
+		if (!validatedUser.success) {
+			return {
+				...prevState,
+				zodErrors: validatedUser.error.flatten().fieldErrors,
+				data: null,
+			};
+		}
+
 		const newUser = new User(user);
 		await newUser.save();
 
-		return { message: 'Register success', isJSON: false };
+		return { ...prevState, message: 'Registration successful', data: 'its ok', zodErrors: {}, isJSON: false };
 	} catch (e) {
 		if (e instanceof mongoose.Error.ValidationError) {
-			//TODO
-			// this is not the way
-			return { message: JSON.stringify(e), isJSON: true };
+			return { ...prevState, dbErrorMsg: JSON.stringify(e), isJSON: true };
 		}
 
 		if (e instanceof mongo.MongoServerError && e.code === 11000) {
-			return { message: 'Email already exists', isJSON: false };
+			return { ...prevState, dbErrorMsg: 'Email already exists', isJSON: false };
 		}
 
-		return { message: 'Registration failed due to an unexpected error', isJSON: false };
+		return { ...prevState, dbErrorMsg: 'Registration failed due to an unexpected error', isJSON: false };
 	}
+};
+
+export const logout = async () => {
+	const session = await getSession();
+	session?.destroy();
+	return;
 };
 
 export const getUsers = async () => {

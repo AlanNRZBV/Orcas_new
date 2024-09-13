@@ -1,7 +1,5 @@
 export interface IUser {
-	name: string;
-	lastName: string;
-	middleName: string;
+	username: string;
 	password: string;
 	email: string;
 }
@@ -11,7 +9,12 @@ export interface IUserLogin {
 	password: string;
 }
 
-export interface IErrorResponse {
+export interface IUserFormResponse {
+	data: null | string;
+	zodErrors?: {
+		[key: string]: string[];
+	};
+	dbErrorMsg: string | null;
 	message: string;
 	isJSON: boolean;
 }

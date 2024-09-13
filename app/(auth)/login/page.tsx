@@ -4,7 +4,7 @@ import UserForm from '@/components/shared/UserForm';
 
 const Page = () => {
 	return (
-		<Grid container justifyContent="center" alignItems="center" border="3px solid blue" height="100%">
+		<Grid container justifyContent="center" alignItems="center" height="100%">
 			<Grid>
 				<UserForm />
 			</Grid>
