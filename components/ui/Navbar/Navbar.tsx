@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { FC } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,21 +14,21 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { getSession } from '@/lib/actions/getSession';
 import Link from 'next/link';
-import { SessionData } from '@/lib/session';
-import { FC } from 'react';
 import { logout } from '@/lib/actions/user.action';
+import { SessionData } from '@/lib/session';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
 interface Props {
-	isLoggedIn: boolean | undefined;
+	sessionString: string;
 }
 
-const Navbar: FC<Props> = ({ isLoggedIn }) => {
+const Navbar: FC<Props> = ({ sessionString }) => {
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+	const session: SessionData = JSON.parse(sessionString);
 
 	const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorElNav(event.currentTarget);
@@ -48,15 +49,21 @@ const Navbar: FC<Props> = ({ isLoggedIn }) => {
 		await logout();
 	};
 
+	const navLinkStyles = {
+		color: 'inherit',
+		textDecoration: 'none',
+		textTransform: 'uppercase',
+		'&:first-of-type': {
+			marginRight: '1rem',
+		},
+	};
+
 	const btnGroup = (
 		<Box>
-			<Button component={Link} href="/register" variant="text">
-				Register
-			</Button>
-			<Typography component={Link} href="/register">
+			<Typography component={Link} href="/register" sx={navLinkStyles}>
 				Register
 			</Typography>
-			<Typography component={Link} href="/login">
+			<Typography component={Link} href="/login" sx={navLinkStyles}>
 				Login
 			</Typography>
 		</Box>
@@ -108,8 +115,9 @@ const Navbar: FC<Props> = ({ isLoggedIn }) => {
 							</Button>
 						))}
 					</Box>
-					{isLoggedIn ? (
-						<Box sx={{ flexGrow: 0 }}>
+					{session.isLoggedIn ? (
+						<Box display="flex" sx={{ flexGrow: 0, alignItems: 'center' }}>
+							<Typography marginRight={2}>{session.username}</Typography>
 							<Tooltip title="Open settings">
 								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 									<Avatar alt="John Doe" src="" />

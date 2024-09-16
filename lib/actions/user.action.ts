@@ -1,7 +1,7 @@
 'use server';
 import { connectToDb } from '@/lib/db';
 import { User } from '@/database/user.schema';
-import { IUser, IUserFormResponse, IUserLogin } from '@/lib/types';
+import { UserData, IUserFormResponse, IUserLogin } from '@/lib/types';
 import { getSession } from '@/lib/actions/getSession';
 import mongoose, { mongo } from 'mongoose';
 import { userFormSchema } from '@/lib/validation/userFormSchema';
@@ -29,15 +29,16 @@ export const signIn = async (prevState: IUserFormResponse, formData: FormData) =
 		}
 
 		if (!session) {
-			//IDK mb it's not necessary
 			return { ...prevState, message: 'Session error', isJSON: false };
 		}
 
 		session.email = user.email;
+		session._id = user._id;
+		session.role = user.role;
+		session.username = user.username;
 		session.isLoggedIn = true;
 		await session.save();
-
-		return { ...prevState, dbErrorMsg: 'Login successful', isJSON: false };
+		return { ...prevState, message: 'Login successful', isJSON: false };
 	} catch (e) {
 		if (e instanceof mongoose.Error.ValidationError) {
 			//TODO
@@ -53,7 +54,7 @@ export const signUp = async (prevState: IUserFormResponse, formData: FormData) =
 	try {
 		await connectToDb();
 
-		const user: IUser = {
+		const user: UserData = {
 			username: formData.get('username') as string,
 			email: formData.get('email') as string,
 			password: formData.get('password') as string,
@@ -90,6 +91,16 @@ export const logout = async () => {
 	const session = await getSession();
 	session?.destroy();
 	return;
+};
+
+export const getCurrentUser = async () => {
+	try {
+		const session = await getSession();
+
+		if (!session) {
+			return {};
+		}
+	} catch (e) {}
 };
 
 export const getUsers = async () => {

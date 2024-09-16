@@ -2,24 +2,29 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/lib/store';
 
 interface UsersSliceState {
+	_id: string | null;
+	username: string;
+	email: string;
 	name: string;
+	lastName: string;
+	middleName: string;
+	role: string;
 }
 
 const initialState: UsersSliceState = {
-	name: 'ToBeChanged',
+	_id: null,
+	username: '',
+	email: '',
+	name: '',
+	lastName: '',
+	middleName: '',
+	role: '',
 };
 
 export const usersSlice = createSlice({
-	name: 'users',
+	name: 'user',
 	initialState,
-	reducers: {
-		changeName: (state) => {
-			state.name === 'ToBeChanged' ? (state.name = 'changed name') : (state.name = initialState.name);
-		},
-	},
+	reducers: {},
 });
-
-export const { changeName } = usersSlice.actions;
-
-export const currentName = (state: RootState) => state.users.name;
 export const usersReducer = usersSlice.reducer;
+export const userState = (state: RootState) => state.user;

@@ -55,14 +55,14 @@ const UserForm: FC<Props> = ({ isRegister }) => {
 		}
 	}, [state, router]);
 
-	const formContainerStyles: React.CSSProperties = {
+	const formContainerStyles = {
 		margin: '0',
 	};
-	const formControlStyles: React.CSSProperties = {
+	const formControlStyles = {
 		margin: '0',
 		marginBottom: '.5rem',
 	};
-	const loadingButtonStyles: React.CSSProperties = {
+	const loadingButtonStyles = {
 		alignSelf: 'center',
 	};
 
@@ -126,7 +126,7 @@ const UserForm: FC<Props> = ({ isRegister }) => {
 				</FormControl>
 				<Box display="flex" justifyContent={isRegister ? 'center' : 'space-between'} alignItems="center" marginTop={1}>
 					{!isRegister && (
-						<Typography component={Link} href="#" sx={{ textDecoration: 'none' }}>
+						<Typography component={Link} href="#" color="primary" sx={{ textDecoration: 'none' }}>
 							Forgot?
 						</Typography>
 					)}

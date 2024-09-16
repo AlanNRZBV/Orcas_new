@@ -16,7 +16,8 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
-	const session = await getSession();
+	const session = JSON.stringify(await getSession());
+
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
@@ -24,7 +25,7 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
 				<html lang="en" style={{ height: '100%' }}>
 					<body className={inter.className} style={{ margin: '0', height: '100%' }}>
 						<header>
-							<Navbar isLoggedIn={session?.isLoggedIn} />
+							<Navbar sessionString={session} />
 						</header>
 						<Container style={{ height: '100%' }}>{children}</Container>
 					</body>

@@ -4,10 +4,7 @@ import Link from 'next/link';
 const Home = async () => {
 	return (
 		<main style={{ height: '100%' }}>
-			<Container disableGutters sx={{ height: '100%' }}>
-				<Link href="/register">Register</Link>
-				<Link href="/login">Login</Link>
-			</Container>
+			<Container disableGutters sx={{ height: '100%' }}></Container>
 		</main>
 	);
 };
