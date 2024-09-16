@@ -40,7 +40,8 @@ const UserSchema = new Schema<IUserFields>(
 		},
 		role: {
 			type: String,
-			default: 'User',
+			enum: ['user', 'admin'],
+			default: 'user',
 		},
 	},
 	{ timestamps: true },
