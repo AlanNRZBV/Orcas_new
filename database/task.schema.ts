@@ -1,8 +1,8 @@
-import mongoose, { model, Schema, Types } from 'mongoose';
+import { model, models, Schema, Types } from 'mongoose';
 import Project from '@/database/project.schema';
 import { User } from '@/database/user.schema';
 
-const TaskSchema = new mongoose.Schema({
+const TaskSchema = new Schema({
 	projectId: {
 		projectId: {
 			type: Schema.Types.ObjectId,
@@ -65,5 +65,5 @@ const TaskSchema = new mongoose.Schema({
 	},
 });
 
-const Task = model('Task', TaskSchema);
+const Task = models.Task || model('Task', TaskSchema);
 export default Task;

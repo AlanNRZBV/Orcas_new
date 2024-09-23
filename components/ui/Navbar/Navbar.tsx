@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { logout } from '@/lib/actions/user.action';
 import { SessionData } from '@/lib/session';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [{ name: 'studio', link: '/studio' }];
 
 interface Props {
 	sessionString: string;
@@ -101,17 +101,25 @@ const Navbar: FC<Props> = ({ sessionString }) => {
 							onClose={handleCloseNavMenu}
 							sx={{ display: { xs: 'block', md: 'none' } }}
 						>
-							{pages.map((page) => (
-								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+							{pages.map((page, index) => (
+								<MenuItem key={index} onClick={handleCloseNavMenu}>
+									<Typography component={Link} href={page.link} sx={{ textAlign: 'center', textDecoration: 'none' }}>
+										{page.name}
+									</Typography>
 								</MenuItem>
 							))}
 						</Menu>
 					</Box>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-						{pages.map((page) => (
-							<Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-								{page}
+						{pages.map((page, index) => (
+							<Button
+								key={index}
+								component={Link}
+								href={page.link}
+								onClick={handleCloseNavMenu}
+								sx={{ my: 2, color: 'white', display: 'block' }}
+							>
+								{page.name}
 							</Button>
 						))}
 					</Box>

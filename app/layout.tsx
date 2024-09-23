@@ -7,6 +7,7 @@ import { CssBaseline } from '@mui/material';
 import theme from '@/app/theme';
 import Navbar from '@/components/ui/Navbar/Navbar';
 import { getSession } from '@/lib/actions/getSession';
+import { connectToDb } from '@/lib/db';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	const session = JSON.stringify(await getSession());
-
+	await connectToDb();
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />

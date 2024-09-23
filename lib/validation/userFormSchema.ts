@@ -4,4 +4,3 @@ export const userFormSchema = z.object({
 	email: z.string().email('Email is not valid'),
 	password: z.string().min(4, 'Password must be at least 8 characters long.'),
 });
-export type UserFormSchema = z.infer<typeof userFormSchema>;

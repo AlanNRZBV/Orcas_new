@@ -1,10 +1,10 @@
 'use server';
 import { connectToDb } from '@/lib/db';
-import { User } from '@/database/user.schema';
 import { UserData, IUserFormResponse, IUserLogin } from '@/lib/types';
 import { getSession } from '@/lib/actions/getSession';
 import mongoose, { mongo } from 'mongoose';
 import { userFormSchema } from '@/lib/validation/userFormSchema';
+import User from '@/database/user.schema';
 
 export const signIn = async (prevState: IUserFormResponse, formData: FormData) => {
 	try {
@@ -91,24 +91,4 @@ export const logout = async () => {
 	const session = await getSession();
 	session?.destroy();
 	return;
-};
-
-export const getCurrentUser = async () => {
-	try {
-		const session = await getSession();
-
-		if (!session) {
-			return {};
-		}
-	} catch (e) {}
-};
-
-export const getUsers = async () => {
-	try {
-		await connectToDb();
-		const users = await User.find({});
-		return users;
-	} catch (e) {
-		console.log(e);
-	}
 };

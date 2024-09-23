@@ -27,6 +27,7 @@ const INITIAL_STATE: IUserFormResponse = {
 	data: null,
 	isJSON: false,
 	message: '',
+	errorMsg: null,
 	dbErrorMsg: null,
 };
 
@@ -79,7 +80,7 @@ const UserForm: FC<Props> = ({ isRegister }) => {
 						<TextField
 							id="username"
 							name="username"
-							type="username"
+							type="text"
 							label="Username"
 							error={!!state.zodErrors?.username}
 							helperText={state.zodErrors?.username}

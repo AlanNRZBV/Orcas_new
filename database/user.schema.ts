@@ -62,4 +62,5 @@ UserSchema.pre('save', async function (next) {
 	next();
 });
 
-export const User = models.User || model('User', UserSchema);
+const User = models.User || model('User', UserSchema);
+export default User;

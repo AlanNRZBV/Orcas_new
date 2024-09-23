@@ -1,7 +1,7 @@
 import { model, models, Schema, Types } from 'mongoose';
-import { User } from '@/database/user.schema';
-import Project from '@/database/project.schema';
 import Team from '@/database/team.schema';
+import User from '@/database/user.schema';
+import Project from '@/database/project.schema';
 
 const StudioSchema = new Schema(
 	{
@@ -102,4 +102,5 @@ StudioSchema.post('findOneAndDelete', async function (studio) {
 	}
 });
 
-export const Studio = models.Studio || model('Studio', StudioSchema);
+const Studio = models.Studio || model('Studio', StudioSchema);
+export default Studio;

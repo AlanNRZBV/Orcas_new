@@ -9,12 +9,31 @@ export interface IUserLogin {
 	password: string;
 }
 
-export interface IUserFormResponse {
-	data: null | string;
+export interface IActionResponse {
+	message: string | null;
+	errorMsg: string | null;
+	dbErrorMsg: string | null;
 	zodErrors?: {
 		[key: string]: string[];
 	};
-	dbErrorMsg: string | null;
-	message: string;
+	isJSON?: boolean;
+}
+
+export interface IUserFormResponse extends IActionResponse {
+	data: null | string;
 	isJSON: boolean;
+}
+
+export interface IStudioResponse extends IActionResponse {
+	data: null | string;
+}
+
+export interface IStudio {
+	_id: string;
+	name: string;
+	owner: string;
+	projects: [];
+	teams: [];
+	tasks: [];
+	staff: [];
 }

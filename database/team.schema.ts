@@ -1,9 +1,9 @@
-import mongoose, { model, Schema, Types } from 'mongoose';
-import { Studio } from '@/database/studio.schema';
-import { User } from '@/database/user.schema';
+import { model, models, Schema, Types } from 'mongoose';
 import Project from '@/database/project.schema';
+import Studio from '@/database/studio.schema';
+import User from '@/database/user.schema';
 
-const TeamSchema = new mongoose.Schema({
+const TeamSchema = new Schema({
 	studioId: {
 		type: Schema.Types.ObjectId,
 		ref: 'Studio',
@@ -51,5 +51,5 @@ TeamSchema.post('findOneAndDelete', async function (team) {
 	}
 });
 
-const Team = model('Team', TeamSchema);
+const Team = models.Team || model('Team', TeamSchema);
 export default Team;
