@@ -4,7 +4,7 @@ import { CircularProgress, FormControl, FormGroup, TextField, Typography } from 
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormState, useFormStatus } from 'react-dom';
 import { createStudio } from '@/lib/actions/studio.action';
-import { IStudioResponse, IUserFormResponse } from '@/lib/types';
+import { IStudioResponse } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 
 const INITIAL_STATE: IStudioResponse = {

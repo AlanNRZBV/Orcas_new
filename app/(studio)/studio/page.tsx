@@ -1,20 +1,24 @@
 import React from 'react';
 import { getStudio } from '@/lib/actions/studio.action';
-import { IStudio, IStudioResponse } from '@/lib/types';
 import Grid from '@mui/material/Grid2';
-import UserForm from '@/components/shared/UserForm';
-import StudioForm from '@/components/studio/StudioForm';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
 import Button from '@mui/material/Button';
-import { Typography } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
+import StudioTasks from '@/components/studio/StudioTasks';
+import StudioProjects from '@/components/studio/StudioProjects';
+import StudioTeams from '@/components/studio/StudioTeams';
+import StudioStaff from '@/components/studio/StudioStaff';
 
 const Page = async () => {
 	const studio = await getStudio();
 
-	let studioParsed: IStudio | null = null;
-	if (studio.data) {
-		studioParsed = JSON.parse(studio.data);
+	if (!studio.data) {
+		return (
+			<Box>
+				<Typography>Something went wrong</Typography>
+			</Box>
+		);
 	}
 
 	const QuestionBlock = (
@@ -35,14 +39,48 @@ const Page = async () => {
 		</Box>
 	);
 
+	const fz = 18;
+	const dividerMargins = '1rem 0 1rem 0';
+
 	const studioBoard = (
-		<Box>
-			<Typography>{studioParsed?.name}</Typography>
-			<Typography>{studioParsed?.owner}</Typography>
-			<Typography>Teams:{studioParsed?.teams.length}</Typography>
-			<Typography>Tasks:{studioParsed?.tasks.length}</Typography>
-			<Typography>Projects:{studioParsed?.projects.length}</Typography>
-			<Typography>Staff:{studioParsed?.staff.length}</Typography>
+		<Box mt={2}>
+			<Box>
+				<Typography variant="h4" mb={2}>
+					Summary
+				</Typography>
+				<Typography fontSize={fz}>
+					<b>Studio name:&nbsp;</b>
+					{studio.data.name}
+				</Typography>
+			</Box>{' '}
+			<Typography fontSize={fz}>
+				<b>Owner:&nbsp;</b>
+				{studio.data.owner.username}
+			</Typography>
+			<Typography fontSize={fz}>
+				<b>Teams:&nbsp;</b>
+				{studio.data.teams.length}
+			</Typography>
+			<Typography fontSize={fz}>
+				<b>Tasks:&nbsp;</b>
+				{studio.data.tasks.length}
+			</Typography>
+			<Typography fontSize={fz}>
+				<b>Projects:&nbsp;</b>
+				{studio.data.projects.length}
+			</Typography>
+			<Typography fontSize={fz}>
+				<b>Staff:&nbsp;</b>
+				{studio.data.staff.length}
+			</Typography>
+			<Divider sx={{ margin: dividerMargins }} />
+			<StudioTasks tasks={studio.data.tasks} />
+			<Divider sx={{ margin: dividerMargins }} />
+			<StudioProjects />
+			<Divider sx={{ margin: dividerMargins }} />
+			<StudioTeams />
+			<Divider sx={{ margin: dividerMargins }} />
+			<StudioStaff staff={studio.data.staff} />
 		</Box>
 	);
 
@@ -53,7 +91,7 @@ const Page = async () => {
 			alignItems={!studio.data ? 'center' : 'initial'}
 			height="100%"
 		>
-			<Grid>{!studio.data ? QuestionBlock : studioBoard}</Grid>
+			<Grid flexGrow="1">{!studio.data ? QuestionBlock : studioBoard}</Grid>
 		</Grid>
 	);
 };

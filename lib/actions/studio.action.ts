@@ -1,7 +1,7 @@
 'use server';
 import { getSession } from '@/lib/actions/getSession';
 import Studio from '@/database/studio.schema';
-import { IStudioResponse } from '@/lib/types';
+import { IStudio, IStudioResponse } from '@/lib/types';
 import mongoose from 'mongoose';
 import { studioFormSchema } from '@/lib/validation/studioFormSchema';
 
@@ -13,13 +13,16 @@ export const getStudio = async () => {
 			return { errorMsg: 'Session error', message: null, data: null };
 		}
 
-		const studio = await Studio.findOne({ owner: session._id });
+		const studio = await Studio.findOne({ owner: session._id })
+			.populate('owner', 'username firstName lastName middleName')
+			.populate('tasks')
+			.populate({ path: 'staff.userId', select: 'username email' });
 
 		if (!studio) {
 			return { message: 'Studio has not been found', errorMsg: null, data: null };
 		}
 
-		return { message: null, errorMsg: null, data: JSON.stringify(studio) };
+		return { message: null, errorMsg: null, data: studio };
 	} catch (e) {
 		return { message: null, errorMsg: JSON.stringify(e), data: null };
 	}

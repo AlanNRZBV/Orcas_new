@@ -21,19 +21,37 @@ export interface IActionResponse {
 
 export interface IUserFormResponse extends IActionResponse {
 	data: null | string;
-	isJSON: boolean;
 }
 
 export interface IStudioResponse extends IActionResponse {
-	data: null | string;
+	data: string;
 }
+
+export interface IStaffResponse extends IActionResponse {}
 
 export interface IStudio {
 	_id: string;
 	name: string;
-	owner: string;
+	owner: {
+		username: string;
+		firstName: string;
+		lastName: string;
+		middleName: string;
+	};
 	projects: [];
 	teams: [];
 	tasks: [];
-	staff: [];
+	staff: IStaffUnitPopulated[];
+}
+
+export interface IStaffUnitPopulated {
+	userId: {
+		email: string;
+		username: string;
+	};
+	spec: {
+		name: string;
+		rank: string;
+	};
+	_id: string;
 }

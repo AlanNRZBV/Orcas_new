@@ -1,6 +1,6 @@
 import { Container } from '@mui/system';
 
-const Home = async () => {
+const Home = () => {
 	return (
 		<main style={{ height: '100%' }}>
 			<Container disableGutters sx={{ height: '100%' }}></Container>
