@@ -9,6 +9,23 @@ export interface IUserLogin {
 	password: string;
 }
 
+export type User = {
+	_id: string;
+	username: string;
+	firstName?: string;
+	lastName?: string;
+	middleName?: string;
+	email: string;
+	password: string;
+	role: string;
+	invite?: {
+		studioId: string;
+		status: string;
+	};
+	createdAt: string;
+	updatedAt: string;
+};
+
 export interface IActionResponse {
 	message: string | null;
 	errorMsg: string | null;
@@ -46,6 +63,7 @@ export interface IStudio {
 
 export interface IStaffUnitPopulated {
 	userId: {
+		_id: string;
 		email: string;
 		username: string;
 	};

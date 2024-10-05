@@ -10,7 +10,7 @@ import StudioProjects from '@/components/studio/StudioProjects';
 import StudioTeams from '@/components/studio/StudioTeams';
 import StudioStaff from '@/components/studio/StudioStaff';
 
-const Page = async () => {
+const Page = async ({ params }: { params: { studioId: string } }) => {
 	const studio = await getStudio();
 
 	if (!studio.data) {
@@ -80,7 +80,7 @@ const Page = async () => {
 			<Divider sx={{ margin: dividerMargins }} />
 			<StudioTeams />
 			<Divider sx={{ margin: dividerMargins }} />
-			<StudioStaff staff={studio.data.staff} />
+			<StudioStaff staff={studio.data.staff} studioId={params.studioId} />
 		</Box>
 	);
 

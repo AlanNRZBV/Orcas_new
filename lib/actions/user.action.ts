@@ -5,12 +5,16 @@ import { getSession } from '@/lib/actions/getSession';
 import mongoose, { mongo } from 'mongoose';
 import { userFormSchema } from '@/lib/validation/userFormSchema';
 import User from '@/database/user.schema';
+import Studio from '@/database/studio.schema';
 
 export const signIn = async (prevState: IUserFormResponse, formData: FormData) => {
 	try {
 		await connectToDb();
 		const session = await getSession();
 
+		if (!session) {
+			return { ...prevState, message: 'Session error', isJSON: false };
+		}
 		const loginData: IUserLogin = {
 			email: formData.get('email') as string,
 			password: formData.get('password') as string,
@@ -28,16 +32,20 @@ export const signIn = async (prevState: IUserFormResponse, formData: FormData) =
 			return { ...prevState, message: 'Wrong credentials', isJSON: false };
 		}
 
-		if (!session) {
-			return { ...prevState, message: 'Session error', isJSON: false };
-		}
+		const studio = await Studio.findOne({ owner: user._id });
 
 		session.email = user.email;
 		session._id = user._id;
 		session.role = user.role;
 		session.username = user.username;
 		session.isLoggedIn = true;
+
+		if (studio) {
+			session.studioId = studio._id;
+		}
+
 		await session.save();
+
 		return { ...prevState, message: 'Login successful', isJSON: false };
 	} catch (e) {
 		if (e instanceof mongoose.Error.ValidationError) {
@@ -91,4 +99,26 @@ export const logout = async () => {
 	const session = await getSession();
 	session?.destroy();
 	return;
+};
+
+export const checkInvites = async () => {
+	try {
+		const session = await getSession();
+
+		if (!session) {
+			return { errorMsg: 'Session error' };
+		}
+
+		const userId = session._id;
+
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return { errorMsg: 'User doesnt exist' };
+		}
+
+		return { data: user };
+	} catch (e) {
+		return { errorMsg: 'Unexpected error' };
+	}
 };

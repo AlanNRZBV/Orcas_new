@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema } from 'mongoose';
+import mongoose, { model, models, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const SALT_WORK_fACTOR = 10;
@@ -11,6 +11,7 @@ interface IUserFields extends mongoose.Document {
 	role: string;
 	email: string;
 	password: string;
+	invite: [];
 }
 
 const UserSchema = new Schema<IUserFields>(
@@ -42,6 +43,23 @@ const UserSchema = new Schema<IUserFields>(
 			type: String,
 			enum: ['user', 'admin'],
 			default: 'user',
+		},
+		invite: {
+			studioId: {
+				type: Schema.Types.ObjectId,
+				ref: 'Studio',
+				validate: {
+					validator: async (value: Types.ObjectId) => {
+						const user = await User.findById(value);
+						return Boolean(user);
+					},
+					message: 'VALIDATOR ERROR: Studio does not exist!',
+				},
+			},
+			status: {
+				type: String,
+				enum: ['PENDING', 'REJECTED', 'FULFILLED'],
+			},
 		},
 	},
 	{ timestamps: true },

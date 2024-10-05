@@ -5,6 +5,7 @@ export interface SessionData {
 	username?: string;
 	_id?: string;
 	role?: string;
+	studioId?: string;
 	isLoggedIn: boolean;
 }
 

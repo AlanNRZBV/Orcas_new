@@ -16,7 +16,7 @@ export const getStudio = async () => {
 		const studio = await Studio.findOne({ owner: session._id })
 			.populate('owner', 'username firstName lastName middleName')
 			.populate('tasks')
-			.populate({ path: 'staff.userId', select: 'username email' });
+			.populate({ path: 'staff.userId', select: 'username email _id' });
 
 		if (!studio) {
 			return { message: 'Studio has not been found', errorMsg: null, data: null };

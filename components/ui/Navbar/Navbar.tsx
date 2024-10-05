@@ -103,7 +103,11 @@ const Navbar: FC<Props> = ({ sessionString }) => {
 						>
 							{pages.map((page, index) => (
 								<MenuItem key={index} onClick={handleCloseNavMenu}>
-									<Typography component={Link} href={page.link} sx={{ textAlign: 'center', textDecoration: 'none' }}>
+									<Typography
+										component={Link}
+										href={page.name === 'studio' ? page.link + `/${session.studioId}` : page.link}
+										sx={{ textAlign: 'center', textDecoration: 'none' }}
+									>
 										{page.name}
 									</Typography>
 								</MenuItem>
@@ -148,7 +152,11 @@ const Navbar: FC<Props> = ({ sessionString }) => {
 								onClose={handleCloseUserMenu}
 							>
 								<MenuItem onClick={handleCloseUserMenu}>
-									<Typography component={Link} href="/" sx={{ textAlign: 'center' }}>
+									<Typography
+										component={Link}
+										href={`/profile/${session.username}`}
+										sx={{ textAlign: 'center', textDecoration: 'none' }}
+									>
 										Profile
 									</Typography>
 								</MenuItem>
